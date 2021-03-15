@@ -1,0 +1,51 @@
+server:
+  port: 8060
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      port: 8500
+      host: 192.168.1.103
+    gateway:
+      discovery:
+        locator:
+          # 开启从注册中心动态创建路由的功能，利用微服务名进行路由
+          enabled: true
+            # 路由负载配置
+#      default-filters:
+      routes:
+        - id: path_route
+          uri: lb://cat8050
+          predicates:
+            - Path=/cat50/**
+
+        - id: path_route2
+          uri: lb://cat8051
+#          uri: http://192.168.1.103:8051
+          predicates:
+            - Path=/cat51/**
+
+
+#        - id: requestratelimiter_route
+#          uri: https://example.org
+#          filters:
+#          - name: RequestRateLimiter
+#            args:
+#            redis-rate-limiter.replenishRate: 10
+#            redis-rate-limiter.burstCapacity: 20
+#            redis-rate-limiter.requestedTokens: 1
+
+
+logging:
+  level:
+    root: info
+
+#cat8050load-balanced-service:
+#    ribbon:
+#      #负载地址
+#      listOfServers: http://192.168.1.103:8050,http://192.168.1.106:8050
+#      #负载轮询策略
+#      NFLoadBalanceRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+#      # 健康检查
+#      NFLoadBalancerPingClassName: com.magic.gateway.HealthExamination
